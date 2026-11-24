@@ -1,88 +1,68 @@
-# Analisis Deskriptif, Visualisasi, dan Uji Kenormalan Data Life Expectancy (WHO 2000–2015)
+# Analisis Faktor Penentu Angka Harapan Hidup Global (WHO) Tahun 2015
 
-Repositori resmi **Kelompok 1** untuk Tugas Besar mata kuliah **BBK2GAB3 – Statistika Industri**. Proyek ini mengolah dataset [Life Expectancy (WHO) di Kaggle](https://www.kaggle.com/datasets/kumarajarshi/life-expectancy-who) melalui tahapan *data collecting*, *data cleansing*, statistika deskriptif, deteksi *outlier* metode IQR, *sampling* visualisasi, hingga uji kenormalan (*Shapiro-Wilk Test*) dan transformasi data menggunakan Python di [Google Colab](https://colab.research.google.com/).
+[](https://colab.research.google.com/drive/10qO0BUJaXCACJvP14Z2zuUveSthyEhW0?ouid=104796351325196284098)
 
-## Daftar Berkas Repositori
+Repositori **Tugas Besar Statistika Industri (BBK2GAB3)** — Kelas 25-02, Program Studi S1 Sistem Informasi, Telkom University (Kelompok 1). Proyek ini menganalisis pengaruh mortalitas dewasa, PDB per kapita, lama pendidikan, dan status negara terhadap angka harapan hidup global (*Life Expectancy*) menggunakan data *cross-sectional* WHO Tahun 2015.
 
-| Nama Berkas | Deskripsi | Keterangan |
-| :--- | :--- | :--- |
-| `Life Expectancy Data.csv` | Dataset mentah dari WHO & PBB (`2.938` baris × `22` kolom, `193` negara, `2000–2015`) | Sumber data utama |
-| `Life_Expectancy_WHO_Cleaned.csv` | Dataset bersih hasil *drop* 15 kolom, hapus duplikat, dan *mean imputation* (`0` `NaN`) | Output Progress 1 (Task 2) |
-| `Life_Expectancy_Transformed.csv` | Dataset hasil transformasi (`x³`, `x²`, `√x`, `log₁₀`) dari uji kenormalan | Output Progress 2 |
-| `Tubes_statin_kel_1_Complete.ipynb` | Notebook Google Colab kelompok (Bagian 1–6) terhubung langsung ke GitHub Raw | Progress 1 (Task 1–4) |
-| `Tugas_2_Normality_Test_Colab.ipynb` | Notebook Google Colab uji kenormalan *Shapiro-Wilk*, *Q-Q Plot*, dan transformasi | Progress 2 |
-| `Analisis_Statistika_Life_Expectancy_WHO.xlsx` | Workbook Excel dengan rumus dinamis (`AVERAGE`, `STDEV`, `PERCENTILE`, `AVERAGEIF`) | Pendukung analisis |
-| `Laporan_Tugas_Besar_Statistika_Industri_Life_Expectancy_WHO.pdf` | Laporan akhir lengkap Bab I–V (termasuk Sub-bab 4.1–4.2) siap kumpul | Dokumen laporan |
+## Ringkasan Proyek
 
-## Variabel Fokus Penelitian
+Seluruh alur analisis dijalankan secara *end-to-end* di Google Colab tanpa laporan terpisah, mencakup pembersihan data (*cleansing*), statistika deskriptif, deteksi *outlier* (IQR), uji normalitas dan transformasi data, *simple random sampling* (Slovin), uji hipotesis & Chi-Square, hingga pemodelan korelasi dan regresi linear sederhana.
 
-Dari 22 atribut asli, penelitian ini menyaring **7 kolom fokus** agar pemodelan tetap ringkas dan bebas multikolinearitas:
+## Anggota Kelompok 1
 
-| Kolom | Peran | Tipe Data | Keterangan |
+| No | Nama Lengkap | NIM | Fokus Kontribusi |
 | :--- | :--- | :--- | :--- |
-| `Country` & `Year` | Identitas & Waktu | Nominal & Diskrit | Penanda `193` negara selama periode `2000–2015` |
-| `Status` | Variabel Kategorik | Nominal (Biner) | `Developing` (`2.426` baris / `82,57%`) vs `Developed` (`512` baris / `17,43%`) |
-| `Life_expectancy` | Variabel Dependen ($Y$) | Numerik Kontinu | Rata-rata angka harapan hidup sejak lahir (tahun) |
-| `Schooling` | Variabel Independen ($X_1$) | Numerik Kontinu | Rata-rata lama pendidikan formal penduduk (tahun) |
-| `Adult_Mortality` | Variabel Independen ($X_2$) | Numerik Kontinu | Probabilitas kematian usia 15–60 tahun per `1.000` populasi |
-| `GDP` | Pembanding Ekonomi ($X_3$) | Numerik Kontinu | Produk Domestik Bruto per kapita (USD) |
+| 1 | Raffata Izacky Yuarga Aletama | `102042500123` | Uji Ulang Normalitas, Visualisasi, & Integrasi |
+| 2 | Muhammad Dyandra Putra | `102042500152` | *Data Collecting* & *Cleansing* |
+| 3 | Muhammad Abyan Setiabudi | — | Statistika Deskriptif Numerik & Kategorik |
+| 4 | Dustin Alea Maisan | — | *Sampling* Slovin ($n = 126$) |
+| 5 | Elang Reyfan Bagaskara | — | Visualisasi & *Heatmap* Korelasi |
+| 6 | Nailah Farah Ramadhani | — | Deteksi *Outlier* Metode IQR |
 
-## Pembagian Tugas & Alur Notebook
+## Sumber Data & Teknologi
 
-Notebook `Tubes_statin_kel_1_Complete.ipynb` dibagi menjadi 6 bagian kerja yang saling terhubung:
+- **Dataset Utama**: [Life Expectancy (WHO) — Kaggle](https://www.kaggle.com/datasets/kumarajarshi/life-expectancy-who) ([Mirror CSV di repositori ini](https://www.google.com/search?q=https://raw.githubusercontent.com/Dex-toxicabyss/tubes-statin-kel1/main/Life%2520Expectancy%2520Data.csv))
+- **Bahasa & Lingkungan**: Python 3 di Google Colaboratory
+- **Library**: `pandas`, `numpy`, `scipy` (`shapiro`, `ttest_1samp`, `ttest_ind`, `chi2_contingency`, `linregress`), `statsmodels` (`qqplot`), `matplotlib`, `seaborn`
 
-1. **Bagian 1 (`[Dyandra]`):** *Data Cleansing* — pembersihan spasi nama kolom, seleksi 7 kolom fokus, penghapusan duplikat (`0` baris), dan *mean imputation* pada sel `NaN`.
-2. **Bagian 2 (`[Abyan]`):** Statistika Deskriptif — perhitungan *mean*, *median*, standar deviasi, kuartil variabel numerik, dan proporsi kategori `Status`.
-3. **Bagian 3 (`[Nailah]`):** Deteksi Calon Pencilan (*Outlier*) — perhitungan $IQR = Q_3 - Q_1$ serta batas pagar bawah ($Q_1 - 1{,}5 \times IQR$) dan batas pagar atas ($Q_3 + 1{,}5 \times IQR$).
-4. **Bagian 4 (`[Dustin]`):** *Sampling* — pengambilan `n = 100` sampel acak tanpa pengembalian (`random_state=42`) menjadi `df_sampel`.
-5. **Bagian 5 (`[Reyfan]`):** Visualisasi Hubungan Variabel — *Scatter Plot* (`Schooling` vs `Life_expectancy` + garis regresi) dan *Bar Chart* rata-rata per `Status`.
-6. **Bagian 6 (`[Raffata]`):** Visualisasi Statistik — *Histogram* (garis *Mean* & *Median*) serta *Boxplot* sebaran kuartil dan calon pencilan per `Status`.
+## Cara Menjalankan (*Getting Started*)
 
-## Cara Menjalankan di Google Colab
+### Opsi 1: Langsung di Google Colab (Direkomendasikan)
+1. Buka notebook melalui badge **Open In Colab** di atas (atau melalui file `.ipynb` di repositori ini).
+2. Klik **Runtime → Run all** untuk menjalankan seluruh blok dari tahap *cleansing* hingga regresi linear (dataset otomatis dimuat dari *raw URL* GitHub).
 
-Tidak perlu mengunggah file CSV secara manual setiap kali *runtime* terputus karena notebook langsung membaca berkas dari **GitHub Raw**:
-
-1. Buka [Google Colab](https://colab.research.google.com/), pilih **File → Open notebook → GitHub**, lalu masukkan URL repositori `Dex-toxicabyss/tubes-statin-kel1`.
-2. Pilih `Tubes_statin_kel_1_Complete.ipynb` (untuk Progress 1) atau `Tugas_2_Normality_Test_Colab.ipynb` (untuk Progress 2).
-3. Klik **Runtime → Run all** (`Ctrl + F9`).
-
-Untuk mengakses dataset mentah secara langsung di skrip Python lain, gunakan tautan *Raw* berikut:
-
-```python
-import pandas as pd
-
-url = "https://raw.githubusercontent.com/Dex-toxicabyss/tubes-statin-kel1/main/Life%20Expectancy%20Data.csv"
-df = pd.read_csv(url)
+### Opsi 2: Jalankan secara Lokal
+```bash
+git clone https://github.com/Dex-toxicabyss/tubes-statin-kel1.git
+cd tubes-statin-kel1
+pip install pandas numpy scipy statsmodels matplotlib seaborn jupyter
+jupyter notebook
 ```
 
-## Ringkasan Temuan Utama
+## Alur Analisis & Temuan Utama
 
-### Progress 1 — Statistika Deskriptif & Outlier (Data Awal)
+| Tahap | Metode yang Digunakan | Ringkasan Hasil (Tahun 2015) |
+| :--- | :--- | :--- |
+| **1. Cleansing & Deskriptif** | Filter `Year == 2015`, imputasi *mean*, IQR | $N = 183$ negara ($0$ *missing value*); rata-rata `Life_expectancy` **71,62 tahun** (*Developed* 80,71 vs *Developing* 69,69). |
+| **2. Uji Normalitas** | Shapiro–Wilk ($\alpha = 0,05$), Q–Q Plot, Transformasi | Awalnya hanya `Schooling` yang normal ($p = 0,3611$). Transformasi $\sqrt{x}$ menormalkan `Adult_Mortality` ($p = 0,4135$); $x^3$ menaikkan $W$ `Life_expectancy` ke `0,9804` dan $\log_{10}$ menaikkan $W$ `GDP` ke `0,9629`. |
+| **3. Sampling** | *Simple Random Sampling* (Slovin, $e = 5\%$, `random_state=42`) | Terpilih **$n = 126$** negara (68,85% dari populasi). |
+| **4. Uji Hipotesis & Chi-Square** | 1-Sample *t-test* ($\mu > 70$), Welch *t-test*, Chi-Square | Rata-rata sampel **71,34 tahun** signifikan $> 70$ ($p = 0,0340$); perbedaan *Developed* vs *Developing* signifikan ($p = 3,76 \times 10^{-15}$); terdapat hubungan antara `Status` dan kategori harapan hidup ($\chi^2 = 15,9589$; $p = 6,47 \times 10^{-5}$). |
+| **5. Korelasi & Regresi Linear** | Korelasi Pearson & OLS (`Schooling` $\rightarrow$ `Life_expectancy`) | Korelasi `Schooling` $r = 0,7831$; model $\hat{Y} = 2,1257X + 44,0909$ ($R^2 = 0,6133$; $p = 2,37 \times 10^{-27}$). Setiap +1 tahun lama sekolah berasosiasi dengan kenaikan harapan hidup **~2,13 tahun**. |
 
-| Variabel | Missing (`NaN`) | Mean ($\bar{x}$) | SD ($s$) | Median ($Q_2$) | IQR |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| `Life expectancy` (Tahun) | `10` | `69,22` | `9,52` | `72,10` | `12,60` |
-| `Schooling` (Tahun) | `163` | `11,99` | `3,36` | `12,30` | `4,20` |
-| `Adult Mortality` (per 1.000) | `10` | `164,80` | `124,29` | `144,00` | `154,00` |
-| `GDP` (USD) | `448` | `7.483,16` | `14.270,17` | `1.766,95` | `5.446,87` |
+## Struktur Repositori
 
-* **Kesenjangan Status Negara:** Negara maju (`Developed`) mencatat rata-rata harapan hidup `79,20` tahun (lama sekolah `15,80` tahun), unggul `12,10` tahun dibanding negara berkembang (`Developing`) sebesar `67,10` tahun (lama sekolah `11,20` tahun).
-* **Sebaran Homogen vs Ketimpangan Ekstrem:** `Life expectancy` dan `Schooling` memiliki $s < \bar{x}$ (sebaran homogen), sedangkan `GDP` memiliki $s > \bar{x}$ (`14.270,17 > 7.483,16`) yang menunjukkan ketimpangan ekonomi tajam antarnegara.
-
-### Progress 2 — Uji Kenormalan Shapiro-Wilk & Transformasi Data
-
-| Variabel | $W$ Awal | Transformasi Terpilih | $W$ Sesudah Transformasi |
-| :--- | :---: | :--- | :---: |
-| `Life expectancy` | `0,9563` | Pangkat Tiga ($x^3$) | `0,9833` |
-| `Schooling` | `0,9751` | Kuadrat ($x^2$) | `0,9858` |
-| `Adult Mortality` | `0,9168` | Akar Kuadrat ($\sqrt{x}$) | `0,9896` |
-| `GDP` | `0,5629` | Logaritma Basis 10 ($\log_{10} x$) | `0,9757` |
-
-Seluruh transformasi menaikkan statistik uji Shapiro-Wilk ($W$) mendekati `1,00` (`0,98–0,99`) dan meluruskan sebaran titik pada *Q-Q Plot*. Nilai *p-value* tetap di bawah `0,05` karena tingginya sensitivitas uji Shapiro-Wilk pada ukuran sampel besar ($N = 2.938$).
+```text
+tubes-statin-kel1/
+├── Life Expectancy Data.csv        # Dataset mentah WHO (Kaggle)
+├── Tubes_statin_kel_1_.ipynb       # Notebook utama analisis (Colab)
+└── README.md                       # Dokumentasi proyek
+```
 
 ## Referensi
 
-* Rajarshi, K., Russell, D., & Wang, D. (2018). [Life Expectancy (WHO) – Kaggle Dataset](https://www.kaggle.com/datasets/kumarajarshi/life-expectancy-who).
-* Kar, N. G. (2022). [Life Expectancy Statistical Analysis (WHO) – RStudio Pubs](https://rstudio-pubs-static.s3.amazonaws.com/920150_6696a808906844cb98fc53a6c31d6999.html).
-* Aji, C. (2022). [Exploratory Data Analysis (EDA) – RPubs](https://rpubs.com/chaidaraji/eda-life-expectancy).
-* Vasantha, K. (2023). [Prediction of WHO Life Expectancy Data Using Multiple Linear Regression](https://www.ijrar.org/papers/IJRAR23A3006.pdf). *IJRAR*, 10(1).
+- Rajarshi, K., Russell, D., & Wang, D. (2018). [*Life Expectancy (WHO): Statistical Analysis on Factors Influencing Life Expectancy*](https://www.kaggle.com/datasets/kumarajarshi/life-expectancy-who). Kaggle.
+- Aji, C. (2022). [*Exploratory Data Analysis (EDA) – Life Expectancy WHO Dataset*](https://rpubs.com/chaidaraji/eda-life-expectancy). RPubs.
+- Kar, N. G. (2022). [*Life Expectancy Statistical Analysis (WHO)*](https://rstudio-pubs-static.s3.amazonaws.com/920150_6696a808906844cb98fc53a6c31d6999.html). RStudio Pubs.
+
+---
+*Terakhir diperbarui: November 2026*
